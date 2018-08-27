@@ -11,7 +11,7 @@ const Movie = mongoose.model('Movies', new mongoose.Schema({
     maxlength: 255
   },
   genre: { 
-    type: genreSchema,  
+    type: genreSchema,  //Persistence model. What we will store as a document in our MongoDB
     required: true
   },
   numberInStock: { 
@@ -28,10 +28,10 @@ const Movie = mongoose.model('Movies', new mongoose.Schema({
   }
 }));
 
-function validateMovie(movie) {
+function validateMovie(movie) {      //What the client sends us. The input to our API
   const schema = {
     title: Joi.string().min(5).max(50).required(),
-    genreId: Joi.string().required(),
+    genreId: Joi.objectId().required(),
     numberInStock: Joi.number().min(0).required(),
     dailyRentalRate: Joi.number().min(0).required()
   };

@@ -2,11 +2,11 @@ const { Rental, validate } = require('../models/rental')
 const { Movie } = require('../models/movie')
 const { Customer } = require('../models/customer')
 const mongoose = require('mongoose')
-const Fawn = require('fawn')
+const Fawn = require('fawn')  //Used for transactions (2 phase commits)
 const express = require('express')
 const router = express.Router()
 
-Fawn.init(mongoose)
+Fawn.init(mongoose) //initialized Fawn here
 
 router.get('/', async (req, res) => {
   const rentals = await Rental.find().sort('-dateOut')
@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
   const { error } = validate(req.body)
   if (error) return res.status(400).send(error.details[0].message)
 
-  const customer = await Customer.findById(req.body.customerId)
+  const customer = await Customer.findById(req.body.customerId)  //if pass an invalid id we get an exception
   if (!customer) return res.status(400).send('Invalid customer.')
 
   const movie = await Movie.findById(req.body.movieId)
@@ -39,18 +39,17 @@ router.post('/', async (req, res) => {
   })
 
   try {
-    new Fawn.Task()
+    new Fawn.Task()             // uses the ojlinttaskcollections in MongoDB to perform two phase commits. So it adds a new document to that collection, and when all operations are complete, it deletes the doc.
       .save('rentals', rental)
       .update('movies', { _id: movie._id }, {
         $inc: { numberInStock: -1 }
       })
       .run();
 
-
     res.send(rental)
   }
-  catch(ex) {
-    res.status(500).send('Something failed.')
+  catch(ex) {    //catch an exception here
+    res.status(500).send('Something failed.') //internal server failed
   }
 });
 
