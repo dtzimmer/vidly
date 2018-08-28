@@ -1,5 +1,5 @@
 const winston = require('winston'); //for logging errors --has a transport- a storage device for our logs.
-require('winston-mongodb');
+//require('winston-mongodb');
 require('express-async-errors');  //passes the asyncMiddlware function to every route handler so async's don't have to be wrapped in the function
 
 module.exports = function() {
@@ -12,8 +12,8 @@ module.exports = function() {
   });
 
   winston.add(winston.transports.File, { filename: 'logfile.log' });
-  winston.add(winston.transports.MongoDB, {
-    db: 'mongodb://localhost/vidly',
-    level: 'info'  //Set the level here (info, warn and error messages will be logged)
-  });
+  // winston.add(winston.transports.MongoDB, {
+  //   db: 'mongodb://localhost/vidly',
+  //   level: 'info'  //Set the level here (info, warn and error messages will be logged)
+  // });
 }

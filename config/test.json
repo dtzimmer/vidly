@@ -1,0 +1,9 @@
+{
+  "jwtPrivateKey": "1234",
+  "db": "mongodb://localhost/vidly_tests"
+
+}
+
+//copied what was in default.json in here
+//we set the jwtPrivateKey
+//we can read the key from this file
