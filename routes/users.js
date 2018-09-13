@@ -27,7 +27,10 @@ router.post('/', async (req, res) => {
 
 
   const token = user.generateAuthToken();
-  res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email'])); //set header, prefix is x- with arbitrary name, first arg is name, second is value which is token. We set header, then send response
+  res
+    .header('x-auth-token', token)
+    .header('access-control-expose-headers', 'x-auth-token')
+    .send(_.pick(user, ['_id', 'name', 'email'])); //set header, prefix is x- with arbitrary name, first arg is name, second is value which is token. We set header, then send response
 });
 
 module.exports = router;

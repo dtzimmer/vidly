@@ -27,7 +27,13 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.generateAuthToken = function(){   //generateAuthToken will be a method that is part of the user object //arrow functions are for stand alone func. If you want to create a method that is part of an object do not use arrow function syntax.
-  const token = jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, config.get('jwtPrivateKey')); // to reference the object itself, we replace user with 'this' (must use regular function syntax)
+  const token = jwt.sign(
+    {
+      _id: this._id,
+      name: this.name,
+      email: this.email,
+      isAdmin: this.isAdmin },
+    config.get('jwtPrivateKey')); // to reference the object itself, we replace user with 'this' (must use regular function syntax)
   return token;
 }
 
